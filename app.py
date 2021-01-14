@@ -1,7 +1,17 @@
 import json
-from flask import Flask, render_template, redirect, url_for, request, make_response
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    make_response,
+    flash,
+)
+from options import DEFAULTS
 
 app = Flask(__name__)
+app.secret_key = 'esauhou>UO>au.sh35@<Uouo52%@#ouo.42!@#42'
 
 def get_saved_data():
     try:
@@ -12,16 +22,16 @@ def get_saved_data():
 
 @app.route('/')
 def index():
-    data = get_saved_data()
-    return render_template('index.html', saves=data)
+    return render_template('index.html', saves=get_saved_data())
 
 @app.route('/builder')
 def builder():
-    return render_template('builder.html', saves=get_saved_data())
+    return render_template('builder.html', saves=get_saved_data(), options=DEFAULTS)
 
 @app.route('/save', methods=['POST'])
 def save():
-    response = make_response(redirect(url_for('index')))
+    flash("Alright that looks awesome!")
+    response = make_response(redirect(url_for('builder')))
     data = get_saved_data()
     data.update(dict(request.form.items()))
     response.set_cookie('character', json.dumps(data))
